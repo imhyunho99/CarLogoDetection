@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarLogo Detection and Clssification</title>
+    <link rel="shortcut icon" href="./static/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./static/images/favicon.ico" type="image/x-icon">
+
+    <style>
+        /* 전체 레이아웃 스타일 */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+        }
+
+        /* 이미지 업로드 박스 스타일 */
+        .upload-box {
+            width: 300px;
+            height: 200px;
+            border: 2px dashed #ccc; /* 점선 테두리 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            background-color: white;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: border 0.3s ease; /* 부드러운 테두리 변화 */
+        }
+
+        /* 업로드된 이미지 스타일 */
+        .upload-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            display: none; /* 기본적으로 숨김 */
+        }
+
+        /* 숨겨진 파일 입력 */
+        .upload-box input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* 파일명 표시 스타일 */
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* 버튼 스타일 */
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .btn-search {
+            background-color: #007bff;
+        }
+
+        .btn-learn {
+            background-color: #28a745;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 이미지 업로드 박스 -->
+    <div class="upload-box" id="uploadBox">
+        <p id="uploadText">여기를 클릭하여 이미지를 업로드하세요</p>
+        <img id="previewImage">
+        <input type="file" id="fileInput" accept="image/*">
+    </div>
+
+    <!-- 파일명 표시 -->
+    <p class="file-name" id="fileName"></p>
+
+    <!-- 버튼 추가 -->
+    <button class="btn btn-search">로고 검색</button>
+    <button class="btn btn-learn">로고 학습</button>
+
+    <script>
+        document.getElementById("uploadBox").addEventListener("click", function() {
+            document.getElementById("fileInput").click();
+        });
+
+        document.getElementById("fileInput").addEventListener("click", function(event) {
+            event.stopPropagation(); // 부모 div까지 이벤트 전달 방지
+        });
+
+        document.getElementById("fileInput").addEventListener("change", function() {
+            const input = this;
+            const fileNameDisplay = document.getElementById("fileName");
+            const uploadText = document.getElementById("uploadText");
+            const previewImage = document.getElementById("previewImage");
+            const uploadBox = document.getElementById("uploadBox");
+
+            if (input.files.length > 0) {
+                const file = input.files[0];
+                fileNameDisplay.textContent = "선택된 파일: " + file.name;
+
+                // 이미지 미리보기 설정
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = "block";  // 이미지 표시
+                    uploadText.style.display = "none";  // 기존 텍스트 숨기기
+                    uploadBox.style.border = "none";  // 점선 테두리 제거
+                };
+                reader.readAsDataURL(file);
+            } else {
+                fileNameDisplay.textContent = "";
+                previewImage.style.display = "none";  // 이미지 숨김
+                uploadText.style.display = "block";  // 텍스트 다시 표시
+                uploadBox.style.border = "2px dashed #ccc";  // 점선 테두리 복구
+            }
+        });
+    </script>
+
+</body>
+</html>
