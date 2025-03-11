@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CarLogo Detection and Clssification</title>
+    <title>CarLogo Detection and Classification</title>
     <link rel="shortcut icon" href="./static/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="./static/images/favicon.ico" type="image/x-icon">
 
@@ -87,28 +87,25 @@
     </style>
 </head>
 <body>
-
     <!-- 이미지 업로드 박스 -->
     <div class="upload-box" id="uploadBox">
         <p id="uploadText">여기를 클릭하여 이미지를 업로드하세요</p>
         <img id="previewImage">
-        <input type="file" id="fileInput" accept="image/*">
+        <input type="file" id="fileInput" accept="image/*" name="image">
     </div>
 
     <!-- 파일명 표시 -->
     <p class="file-name" id="fileName"></p>
 
-    <!-- 버튼 추가 -->
-    <button class="btn btn-search">로고 검색</button>
-    <button class="btn btn-learn">로고 학습</button>
-
+    <button type="submit" class="btn btn-search">로고 검색</button>
+    <button type="submit" class="btn btn-learn">로고 학습</button>
     <script>
         document.getElementById("uploadBox").addEventListener("click", function() {
             document.getElementById("fileInput").click();
         });
 
         document.getElementById("fileInput").addEventListener("click", function(event) {
-            event.stopPropagation(); // 부모 div까지 이벤트 전달 방지
+            event.stopPropagation();
         });
 
         document.getElementById("fileInput").addEventListener("change", function() {
@@ -126,19 +123,56 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     previewImage.src = e.target.result;
-                    previewImage.style.display = "block";  // 이미지 표시
-                    uploadText.style.display = "none";  // 기존 텍스트 숨기기
-                    uploadBox.style.border = "none";  // 점선 테두리 제거
+                    previewImage.style.display = "block";
+                    uploadText.style.display = "none";
+                    uploadBox.style.border = "none";
                 };
                 reader.readAsDataURL(file);
             } else {
                 fileNameDisplay.textContent = "";
-                previewImage.style.display = "none";  // 이미지 숨김
-                uploadText.style.display = "block";  // 텍스트 다시 표시
-                uploadBox.style.border = "2px dashed #ccc";  // 점선 테두리 복구
+                previewImage.style.display = "none";
+                uploadText.style.display = "block";
+                uploadBox.style.border = "2px dashed #ccc";
             }
         });
+
+        // 🔹 파일을 서버로 전송하는 공통 함수
+        function sendImage(endpoint) {
+            const fileInput = document.getElementById("fileInput");
+            if (fileInput.files.length === 0) {
+                alert("먼저 이미지를 업로드하세요!");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("image", fileInput.files[0]); // 업로드된 파일 추가
+
+            fetch(endpoint, {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                } else {
+                    alert("오류 발생");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        // 🔹 로고 검색 버튼 이벤트
+        document.querySelector(".btn-search").addEventListener("click", function() {
+            sendImage("/search/");
+        });
+
+        // 🔹 로고 학습 버튼 이벤트
+        document.querySelector(".btn-learn").addEventListener("click", function() {
+            sendImage("/learn/");
+        });
     </script>
+
 
 </body>
 </html>
