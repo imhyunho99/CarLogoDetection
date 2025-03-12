@@ -3,9 +3,14 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
+"""from utils.searchUtiles import SearchUtil
+from utils.learnUtils import LearnUtil"""
+
+
 def home(request):
     print("home render")
-    return render(request, 'carLogoDetection/home.html')
+    return render(request, "carLogoDetection/home.html")
+
 
 @csrf_exempt
 def search(request):
@@ -18,6 +23,7 @@ def search(request):
 
     return JsonResponse({"error": "이미지 업로드 실패"}, status=400)
 
+
 @csrf_exempt
 def learn(request):
     """로고 학습 기능"""
@@ -27,7 +33,3 @@ def learn(request):
         print("test learn Post Success")
         return JsonResponse({"message": f"로고 학습 실행! 파일: {file_path}"})
     return JsonResponse({"error": "이미지 업로드 실패"}, status=400)
-
-
-
-

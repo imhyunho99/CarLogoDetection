@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "captcha",
-    "carLogo"
+    "carLogo",
 ]
 CAPTCHA_FONT_SIZE = 40
 CAPTCHA_LENGTH = 6
