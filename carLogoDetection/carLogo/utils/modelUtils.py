@@ -1,14 +1,18 @@
 import pretrainedmodels
 import torch
-from torch import nn, F
+from torch import nn
+import torch.nn.functional as F
+
 
 MODEL_PATH = "carLogoDetection/carLogo/model"
+LOGODICT = ["acura", "alfaromeo", "buick", "cadillac", "dodge", "fiat", "opel"]
 
 
 class ResNet34(nn.Module):
+
     def __init__(self, pretrained):
         super(ResNet34, self).__init__()
-        self.class_num = 10
+        self.class_num = 7
         if pretrained is True:
             self.model = pretrainedmodels.__dict__["resnet34"](pretrained="imagenet")
         else:
