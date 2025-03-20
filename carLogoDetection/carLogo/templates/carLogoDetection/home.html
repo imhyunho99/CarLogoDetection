@@ -98,7 +98,6 @@
     <p class="file-name" id="fileName"></p>
 
     <button type="submit" class="btn btn-search">로고 검색</button>
-    <button type="submit" class="btn btn-learn">로고 학습</button>
     <script>
         document.getElementById("uploadBox").addEventListener("click", function() {
             document.getElementById("fileInput").click();
@@ -165,11 +164,6 @@
         // 🔹 로고 검색 버튼 이벤트
         document.querySelector(".btn-search").addEventListener("click", function() {
             sendImage("/search/");
-        });
-
-        // 🔹 로고 학습 버튼 이벤트
-        document.querySelector(".btn-learn").addEventListener("click", function() {
-            sendImage("/learn/");
         });
     </script>
 

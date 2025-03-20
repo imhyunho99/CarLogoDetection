@@ -34,10 +34,8 @@ def search(image):
     # 모델 입력 및 예측
     output = model(input_image)
     # 예측 결과 확인
-    # agrmax 값이 너무 작으면 Alert 예측값이 너무 작습니다. 학습되지 않은 로고일 수 있습니다. 라벨을 입력하세욘 추가개발
-
+    # agrmax 값이 너무 작으면 Alert 예측값이 너무 작습니다. 학습되지 않은 로고일 수 있습니다. 라벨을 입력하세요. 추가개발
     output = output.softmax(dim=1)
-    print(output)
-    predicted_label = modelUtils.LOGODICT[output.argmax(dim=1).item()]  # 예측된 라
+    predicted_label = modelUtils.LOGODICT[output.argmax(dim=1).item()]  # 예측된 라벨
     print(predicted_label)
     return predicted_label

@@ -2,7 +2,22 @@ import torch
 from torch import nn
 import torchvision.models as models
 
-LOGODICT = ["acura", "alfaromeo", "buick", "cadillac", "dodge", "fiat", "opel"]
+LOGODICT = [
+    "acura",
+    "alfaromeo",
+    "buick",
+    "cadillac",
+    "dodge",
+    "fiat",
+    "hyundai",
+    "lexus",
+    "mazda",
+    "mercedes",
+    "opel",
+    "skoda",
+    "toyota",
+    "volkswagen",
+]
 
 
 class ResNet34(nn.Module):
