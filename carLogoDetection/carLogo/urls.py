@@ -1,7 +1,9 @@
+# urls.py
 from django.urls import path
-from .views import home, search
+from .views import home, search_logo, log  # log는 로그 확인용 API
 
 urlpatterns = [
-    path("", home, name="home"),  # http://127.0.0.1:8000/ 에 접속하면 home 뷰 실행
-    path("search/", search, name="search"),
+    path("", home, name="home"),
+    path("search/", search_logo, name="search_logo"),
+    path("log/", log, name="log"),  # 로그 확인 API
 ]

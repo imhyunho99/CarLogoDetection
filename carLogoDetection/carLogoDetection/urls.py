@@ -20,6 +20,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', include('carLogo.urls')),  # blog 앱의 URL을 메인 경로로 연결
-
+    path("", include("carLogo.urls")),  # blog 앱의 URL을 메인 경로로 연결
 ]

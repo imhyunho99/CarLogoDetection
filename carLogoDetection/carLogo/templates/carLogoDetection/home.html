@@ -135,37 +135,34 @@
             }
         });
 
-        // 🔹 파일을 서버로 전송하는 공통 함수
         function sendImage(endpoint) {
-            const fileInput = document.getElementById("fileInput");
-            if (fileInput.files.length === 0) {
-                alert("먼저 이미지를 업로드하세요!");
-                return;
+                const fileInput = document.getElementById("fileInput");
+                if (fileInput.files.length === 0) {
+                    alert("먼저 이미지를 업로드하세요!");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("image", fileInput.files[0]); // 업로드된 파일 추가
+
+                fetch(endpoint, {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert("서버 응답: " + data.message);  // 👉 predict_label까지 포함된 메시지 출력
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
             }
 
-            const formData = new FormData();
-            formData.append("image", fileInput.files[0]); // 업로드된 파일 추가
-
-            fetch(endpoint, {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    alert(data.message);
-                } else {
-                    alert("오류 발생");
-                }
-            })
-            .catch(error => console.error("Error:", error));
-        }
-
-        // 🔹 로고 검색 버튼 이벤트
-        document.querySelector(".btn-search").addEventListener("click", function() {
-            sendImage("/search/");
-        });
-    </script>
+            // ✅ 버튼 클릭 시 sendImage 호출
+            document.querySelector(".btn-search").addEventListener("click", function () {
+                sendImage("/search/");
+            });
+        </script>
 
 
 </body>
