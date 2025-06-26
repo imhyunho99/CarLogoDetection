@@ -1,1 +1,1 @@
-https://carlogodetction.duckdns.org
+https://carlogo.duckdns.org
