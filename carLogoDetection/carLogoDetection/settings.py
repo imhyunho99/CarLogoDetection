@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-8l_7v2*sw0r)lzyc0rz(yxjqxkk&+*a49&jqn6+ukg@1eix_f!"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1"]  # Host IP Oracle or AWS
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "140.245.71.233", "carproject.duckdns.org"]  # Host IP Oracle or AWS
 
 
 # Application definition
