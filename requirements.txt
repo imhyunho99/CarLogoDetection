@@ -21,9 +21,5 @@ setuptools==80.9.0
 six==1.17.0
 sqlparse==0.5.3
 sympy==1.13.3
-torch==2.7.1+cpu
-torchaudio==2.7.1+cpu
-torchvision==0.22.1+cpu
-typing_extensions==4.12.2
 uWSGI==2.0.30
 wheel==0.45.1
