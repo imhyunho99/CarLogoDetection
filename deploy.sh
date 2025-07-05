@@ -13,7 +13,6 @@ source $VENV/bin/activate
 
 echo "📂 Migration & Static"
 python manage.py migrate
-python manage.py collectstatic --noinput
 
 echo "♻️ 무중단 리로드"
 touch  /home/ubuntu/CarLogoDetection/reload.txt
