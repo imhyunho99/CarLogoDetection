@@ -5,7 +5,7 @@ CarLogo 프로젝트는 업로드된 이미지에서 자동차 로고를 인식�
 ## 🌐 데모 URL
 
 
-[https://carlogo.duckdns.org](https://carproject.duckdns.org/)
+https://carproject.duckdns.org/
 
 
 ---
