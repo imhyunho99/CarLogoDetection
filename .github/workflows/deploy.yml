@@ -22,5 +22,5 @@ jobs:
 
       - name: Run deploy script on EC2
         run: |
-          ssh ${{ububtu}}@${{140.245.71.233}} 'bash /home/ubuntu/CarLogoDetection/deploy.sh'
+          ssh ${{ubuntu}}@${{140.245.71.233}} 'bash /home/ubuntu/CarLogoDetection/deploy.sh'
 
