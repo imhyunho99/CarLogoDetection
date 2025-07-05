@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP_DIR="/home/ubuntu/CarLogoDetection"
+APP_DIR="/home/ubuntu/CarLogoDetection/carLogoDetection"
 VENV="/home/ubuntu/carlogo"
 
 cd $APP_DIR
