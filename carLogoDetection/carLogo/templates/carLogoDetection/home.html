@@ -8,7 +8,6 @@
     <link rel="icon" href="./static/images/favicon.ico" type="image/x-icon">
 
     <style>
-        /* 전체 레이아웃 스타일 */
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -22,7 +21,6 @@
             background-color: #f9f9f9;
         }
 
-        /* 이미지 업로드 박스 스타일 */
         .upload-box {
             width: 300px;
             height: 200px;
@@ -35,18 +33,16 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            transition: border 0.3s ease; /* 부드러운 테두리 변화 */
+            transition: border 0.3s ease;
         }
 
-        /* 업로드된 이미지 스타일 */
         .upload-box img {
             max-width: 100%;
             max-height: 100%;
             object-fit: cover;
-            display: none; /* 기본적으로 숨김 */
+            display: none;
         }
 
-        /* 숨겨진 파일 입력 */
         .upload-box input {
             position: absolute;
             width: 100%;
@@ -55,14 +51,12 @@
             cursor: pointer;
         }
 
-        /* 파일명 표시 스타일 */
         .file-name {
             margin-top: 10px;
             font-size: 14px;
             color: #333;
         }
 
-        /* 버튼 스타일 */
         .btn {
             padding: 10px 20px;
             margin: 10px;
@@ -87,17 +81,15 @@
     </style>
 </head>
 <body>
-    <!-- 이미지 업로드 박스 -->
     <div class="upload-box" id="uploadBox">
-        <p id="uploadText">여기를 클릭하여 이미지를 업로드하세요</p>
+        <p id="uploadText">Imgae Upload</p>
         <img id="previewImage">
         <input type="file" id="fileInput" accept="image/*" name="image">
     </div>
 
-    <!-- 파일명 표시 -->
     <p class="file-name" id="fileName"></p>
 
-    <button type="submit" class="btn btn-search">로고 검색</button>
+    <button type="submit" class="btn btn-search">Logo Search</button>
     <script>
         document.getElementById("uploadBox").addEventListener("click", function() {
             document.getElementById("fileInput").click();
@@ -116,9 +108,8 @@
 
             if (input.files.length > 0) {
                 const file = input.files[0];
-                fileNameDisplay.textContent = "선택된 파일: " + file.name;
+                fileNameDisplay.textContent = file.name;
 
-                // 이미지 미리보기 설정
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     previewImage.src = e.target.result;
@@ -138,12 +129,12 @@
         function sendImage(endpoint) {
                 const fileInput = document.getElementById("fileInput");
                 if (fileInput.files.length === 0) {
-                    alert("먼저 이미지를 업로드하세요!");
+                    alert("file is invalid! image file is wrong");
                     return;
                 }
 
                 const formData = new FormData();
-                formData.append("image", fileInput.files[0]); // 업로드된 파일 추가
+                formData.append("image", fileInput.files[0]);
 
                 fetch(endpoint, {
                     method: "POST",
@@ -151,14 +142,12 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert("서버 응답: " + data.message);  // 👉 predict_label까지 포함된 메시지 출력
+                    alert(data.message);
                 })
                 .catch(error => {
                     console.error("Error:", error);
                 });
             }
-
-            // ✅ 버튼 클릭 시 sendImage 호출
             document.querySelector(".btn-search").addEventListener("click", function () {
                 sendImage("/search/");
             });
