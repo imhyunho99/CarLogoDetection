@@ -6,29 +6,23 @@
     <title>CarLogo Detection and Classification</title>
     <link rel="shortcut icon" href="./static/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="./static/images/favicon.ico" type="image/x-icon">
-
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
             background-color: #f9f9f9;
         }
 
         .upload-box {
             width: 300px;
             height: 200px;
-            border: 2px dashed #ccc; /* 점선 테두리 */
+            border: 2px dashed #ccc;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
+            margin: 40px auto 20px;
             background-color: white;
             cursor: pointer;
             position: relative;
@@ -52,9 +46,9 @@
         }
 
         .file-name {
-            margin-top: 10px;
             font-size: 14px;
             color: #333;
+            margin-bottom: 20px;
         }
 
         .btn {
@@ -71,18 +65,53 @@
             background-color: #007bff;
         }
 
-        .btn-learn {
-            background-color: #28a745;
-        }
-
         .btn:hover {
             opacity: 0.8;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .modal-buttons {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .modal-buttons button {
+            margin-left: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
+
     <div class="upload-box" id="uploadBox">
-        <p id="uploadText">Imgae Upload</p>
+        <p id="uploadText">Image Upload</p>
         <img id="previewImage">
         <input type="file" id="fileInput" accept="image/*" name="image">
     </div>
@@ -90,25 +119,44 @@
     <p class="file-name" id="fileName"></p>
 
     <button type="submit" class="btn btn-search">Logo Search</button>
+
+    <!-- Modal -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <p id="predictionText"></p>
+            <div id="correctLabelInput" style="display: none;">
+                <label for="correctLabel">Correct Answer:</label>
+                <input type="text" id="correctLabel" name="correctLabel">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-search" id="modalYesBtn">Correct</button>
+                <button class="btn btn-search" id="modalNoBtn">Wrong</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        document.getElementById("uploadBox").addEventListener("click", function() {
-            document.getElementById("fileInput").click();
-        });
+        const uploadBox = document.getElementById("uploadBox");
+        const fileInput = document.getElementById("fileInput");
+        const fileNameDisplay = document.getElementById("fileName");
+        const uploadText = document.getElementById("uploadText");
+        const previewImage = document.getElementById("previewImage");
 
-        document.getElementById("fileInput").addEventListener("click", function(event) {
-            event.stopPropagation();
-        });
+        const modal = document.getElementById("resultModal");
+        const predictionText = document.getElementById("predictionText");
+        const correctLabelInput = document.getElementById("correctLabelInput");
+        const correctLabelField = document.getElementById("correctLabel");
 
-        document.getElementById("fileInput").addEventListener("change", function() {
-            const input = this;
-            const fileNameDisplay = document.getElementById("fileName");
-            const uploadText = document.getElementById("uploadText");
-            const previewImage = document.getElementById("previewImage");
-            const uploadBox = document.getElementById("uploadBox");
+        let predictedLabel = "";
+        let selectedImage = null;
 
-            if (input.files.length > 0) {
-                const file = input.files[0];
-                fileNameDisplay.textContent = file.name;
+        uploadBox.addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("click", event => event.stopPropagation());
+
+        fileInput.addEventListener("change", function() {
+            if (this.files.length > 0) {
+                selectedImage = this.files[0];
+                fileNameDisplay.textContent = selectedImage.name;
 
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -117,8 +165,9 @@
                     uploadText.style.display = "none";
                     uploadBox.style.border = "none";
                 };
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(selectedImage);
             } else {
+                selectedImage = null;
                 fileNameDisplay.textContent = "";
                 previewImage.style.display = "none";
                 uploadText.style.display = "block";
@@ -126,33 +175,77 @@
             }
         });
 
-        function sendImage(endpoint) {
-                const fileInput = document.getElementById("fileInput");
-                if (fileInput.files.length === 0) {
-                    alert("file is invalid! image file is wrong");
+        document.querySelector(".btn-search").addEventListener("click", function () {
+            if (!selectedImage) {
+                alert("!Image File");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("image", selectedImage);
+
+            fetch("/search/", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                predictedLabel = data.result || data.predicted_label || "Unknown";
+                predictionText.textContent = `Predict Result:"${predictedLabel}"`;
+                correctLabelField.value = "";
+                correctLabelInput.style.display = "none";
+                modal.style.display = "flex";
+            })
+            .catch(err => {
+                console.error("predict fail:", err);
+                alert("Predict Failed.");
+            });
+        });
+
+
+        document.getElementById("modalNoBtn").addEventListener("click", function () {
+            correctLabelInput.style.display = "block";
+            const yesBtn = document.getElementById("modalYesBtn");
+            const noBtn = document.getElementById("modalNoBtn");
+
+            yesBtn.style.display = "none";             // ❌ Correct 버튼 숨기기
+            noBtn.textContent = "Submit";              // ✅ 버튼 텍스트 변경
+            noBtn.onclick = function () {              // ✅ Submit 핸들러 등록
+                const correct = correctLabelField.value.trim();
+                if (!correct) {
+                    alert("Please enter the correct label.");
                     return;
                 }
 
-                const formData = new FormData();
-                formData.append("image", fileInput.files[0]);
+                const feedbackForm = new FormData();
+                feedbackForm.append("image", selectedImage);
+                feedbackForm.append("predicted_label", predictedLabel);
+                feedbackForm.append("correct_label", correct);
 
-                fetch(endpoint, {
+                fetch("/submit-feedback/", {
                     method: "POST",
-                    body: formData
+                    body: feedbackForm
                 })
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(data => {
-                    alert(data.message);
+                    modal.style.display = "none";
+                    yesBtn.style.display = "inline-block";  // 다시 보이도록 원복
+                    noBtn.textContent = "Wrong";            // 다시 "Wrong"으로
+                    correctLabelInput.style.display = "none";
+                    alert("Feedback submitted. Thank you!");
                 })
-                .catch(error => {
-                    console.error("Error:", error);
+                .catch(err => {
+                    console.error("Feedback error:", err);
+                    alert("Failed to submit feedback.");
                 });
+            };
+        });
+
+        window.addEventListener("click", function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
             }
-            document.querySelector(".btn-search").addEventListener("click", function () {
-                sendImage("/search/");
-            });
-        </script>
-
-
+        });
+    </script>
 </body>
 </html>
