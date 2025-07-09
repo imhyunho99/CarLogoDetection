@@ -42,7 +42,6 @@ class FeedbackDataset(Dataset):
         return image, label_idx
 
 
-# 이미지 전처리 (train)
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),

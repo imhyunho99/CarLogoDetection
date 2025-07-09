@@ -1,31 +1,18 @@
 import torch
 from torch import nn
 import torchvision.models as models
+from ..models import LogoLabel
 
-#replace Logo Label from db
-LOGODICT = [
-    "acura",
-    "alfaromeo",
-    "buick",
-    "cadillac",
-    "dodge",
-    "fiat",
-    "hyundai",
-    "lexus",
-    "mazda",
-    "mercedes",
-    "opel",
-    "skoda",
-    "toyota",
-    "volkswagen",
-]
+def get_label_list():
+    return list(LogoLabel.objects.values_list('name', flat=True))
 
 
 class ResNet34(nn.Module):
     def __init__(self, pretrained=True):
         super(ResNet34, self).__init__()
 
-        self.class_num = len(LOGODICT)
+        label_list = get_label_list()
+        self.class_num = len(label_list)
 
         if pretrained:
             self.model = models.resnet34(weights=models.ResNet34_Weights.IMAGENET1K_V1)
