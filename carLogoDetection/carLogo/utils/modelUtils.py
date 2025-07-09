@@ -2,6 +2,7 @@ import torch
 from torch import nn
 import torchvision.models as models
 
+#replace Logo Label from db
 LOGODICT = [
     "acura",
     "alfaromeo",
