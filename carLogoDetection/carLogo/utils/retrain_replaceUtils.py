@@ -1,15 +1,25 @@
 import os
-from ..train import train
+import sys
+import django
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+print(BASE_DIR)
+sys.path.append(BASE_DIR)
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "carLogoDetection.settings")  # 소문자 c 주의
+django.setup()
+
+
+from .train import train
 from .trainUtils import replace_model_if_better
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-RETRAINED_MODEL_PATH = os.path.join(BASE_DIR, "model_retrained.pt")
-CURRENT_MODEL_PATH = os.path.join(BASE_DIR, "utils", "model.pt")  # 현재 모델
+RETRAINED_MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../models/model_retrained.pt")
+CURRENT_MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../models/model_current.pt")
 FINAL_SAVE_PATH = CURRENT_MODEL_PATH
 
 def retrain_and_replace():
-    print("📦 Start retraining...")
-    train()  # retrain & save to model_retrained.pt
+    print("Start retraining...")
+    train()
 
     print("Evaluate and decide whether to replace...")
     replaced = replace_model_if_better(
