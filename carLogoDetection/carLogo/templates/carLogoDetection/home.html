@@ -202,15 +202,18 @@
             });
         });
 
+        document.getElementById("modalYesBtn").addEventListener("click", function () {
+            modal.style.display = "none";
+        });
 
         document.getElementById("modalNoBtn").addEventListener("click", function () {
             correctLabelInput.style.display = "block";
             const yesBtn = document.getElementById("modalYesBtn");
             const noBtn = document.getElementById("modalNoBtn");
 
-            yesBtn.style.display = "none";             // ❌ Correct 버튼 숨기기
-            noBtn.textContent = "Submit";              // ✅ 버튼 텍스트 변경
-            noBtn.onclick = function () {              // ✅ Submit 핸들러 등록
+            yesBtn.style.display = "none";
+            noBtn.textContent = "Submit";
+            noBtn.onclick = function () {
                 const correct = correctLabelField.value.trim();
                 if (!correct) {
                     alert("Please enter the correct label.");
@@ -229,8 +232,8 @@
                 .then(res => res.json())
                 .then(data => {
                     modal.style.display = "none";
-                    yesBtn.style.display = "inline-block";  // 다시 보이도록 원복
-                    noBtn.textContent = "Wrong";            // 다시 "Wrong"으로
+                    yesBtn.style.display = "inline-block";  //
+                    noBtn.textContent = "Wrong";            //
                     correctLabelInput.style.display = "none";
                     alert("Feedback submitted. Thank you!");
                 })
