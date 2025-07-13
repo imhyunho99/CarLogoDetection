@@ -20,7 +20,6 @@ class ResNet34(nn.Module):
             self.model = models.resnet34(weights=None)
             print("Pretrained model loading failed, using untrained model")
 
-        # 마지막 fc 레이어는 클래스 수에 맞게 교체
         self.model.fc = nn.Linear(512, self.class_num)
 
     def forward(self, x):
