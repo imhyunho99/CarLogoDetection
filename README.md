@@ -20,18 +20,18 @@ https://carproject.duckdns.org/
 - OpenCV
 
 ### Frontend
-- React (Create React App)
+- React
 
 ### 배포 및 인프라
 - Oracle Cloud Free Tier (Ubuntu 22.04)
 - Nginx + uWSGI
 - systemd (uWSGI 프로세스 관리)
-- SSL 인증: Let's Encrypt (Certbot)
+- Certbot
 
 ### CI/CD
 - GitHub Actions
-  - main 브랜치에 push 시 서버로 SSH 접속
-  - `deploy.sh` 실행: `git pull → migrate → collectstatic → uWSGI 재시작`
+  -  Trigger: main branch push
+  - `deploy.sh`
 
 ---
 
