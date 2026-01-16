@@ -15,7 +15,7 @@ from rest_framework import status
 import time
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('user')
 
 # Global model cache
 model = None
@@ -119,7 +119,3 @@ def submit_feedback(request):
     except Exception as e:
         logger.error(f"Feedback submission failed: {str(e)}")
         return Response({"error": "Feedback submission failed"}, status=500)
-
-def sentry_debug(request):
-    division_by_zero = 1 / 0
-    return Response({"error": "This should not be reached"}, status=500)

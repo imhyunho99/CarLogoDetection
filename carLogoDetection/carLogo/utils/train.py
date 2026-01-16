@@ -19,8 +19,9 @@ from torchvision import transforms
 from PIL import Image
 from ..models import Feedback, LogoLabel
 from .modelUtils import ResNet34
-from .model_loader import device
+from .model_loader import device, MODEL_PATH
 from tqdm import tqdm
+from sklearn.model_selection import train_test_split
 
 BATCH_SIZE = 8
 EPOCHS = 5
@@ -30,8 +31,8 @@ MEDIA_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'
 
 
 class FeedbackDataset(Dataset):
-    def __init__(self, transform=None):
-        self.feedbacks = list(Feedback.objects.all())
+    def __init__(self, feedbacks, transform=None):
+        self.feedbacks = feedbacks
         self.transform = transform
 
         labels = LogoLabel.objects.all()
@@ -61,26 +62,45 @@ transform = transforms.Compose([
 ])
 
 
+import logging
+
+logger = logging.getLogger('training')
+
+# ... (rest of the imports)
+
+# ... (FeedbackDataset class)
+
 def train():
     num_classes = LogoLabel.objects.count()
     if num_classes == 0:
-        print("No labels found in DB. Aborting training.")
+        logger.warning("No labels found in DB. Aborting training.")
         return
 
-    model = ResNet34(pretrained=False)
+    all_feedbacks = list(Feedback.objects.all())
+    train_feedbacks, val_feedbacks = train_test_split(all_feedbacks, test_size=0.2, random_state=42)
+
+    train_dataset = FeedbackDataset(train_feedbacks, transform=transform)
+    val_dataset = FeedbackDataset(val_feedbacks, transform=transform)
+
+    train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+    val_dataloader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
+
+    model = ResNet34()
+    # Load the state dict from the current model
+    if os.path.exists(MODEL_PATH):
+        model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+        logger.info(f"Loaded weights from {MODEL_PATH} for fine-tuning.")
+    
     model.model.fc = nn.Linear(512, num_classes)
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 
-    dataset = FeedbackDataset(transform=transform)
-    dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
-
     model.train()
     for epoch in range(EPOCHS):
         total_loss = 0.0
-        for images, labels in tqdm(dataloader, desc=f"Epoch {epoch + 1}/{EPOCHS}"):
+        for images, labels in tqdm(train_dataloader, desc=f"Epoch {epoch + 1}/{EPOCHS}"):
             images, labels = images.to(device), labels.to(device)
             optimizer.zero_grad()
             outputs = model(images)
@@ -89,12 +109,15 @@ def train():
             optimizer.step()
             total_loss += loss.item()
 
-        avg_loss = total_loss / len(dataloader)
-        print(f"Epoch {epoch + 1} average loss: {avg_loss:.4f}")
+        avg_loss = total_loss / len(train_dataloader)
+        logger.info(f"Epoch {epoch + 1} average loss: {avg_loss:.4f}")
 
-    save_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../models/model_retrained.pt")
-    torch.save(model.state_dict(), save_path)
-    print(f"Retrained model saved to {save_path}")
+    retrained_model_path = MODEL_PATH.parent / "model_retrained.pt"
+    torch.save(model.state_dict(), retrained_model_path)
+    logger.info(f"Retrained model saved to {retrained_model_path}")
+
+    # Return validation dataloader for evaluation
+    return val_dataloader
 
 
 if __name__ == "__main__":
