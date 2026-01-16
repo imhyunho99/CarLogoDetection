@@ -5,6 +5,10 @@ VENV="/home/ubuntu/carlogo"
 
 cd $APP_DIR
 
+echo "Creating .env file"
+echo "SENTRY_DSN=$SENTRY_DSN" > .env
+echo "DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY" >> .env
+
 echo "📥 Git pull"
 git pull origin master
 

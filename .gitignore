@@ -1,3 +1,26 @@
 carLogoDetection/db.sqlite3
 **/__pycache__/
 **/*.png
+venv/
+env/
+*.pyc
+.DS_Store
+.idea/
+.vscode/
+*.log
+*.sqlite3
+*.env
+*.bak
+*.swp
+__pycache__/
+*.egg-info/
+dist/
+build/
+*.egg
+*.cover
+
+# Deployment scripts (local only)
+sync_to_server.sh
+quick_sync.sh
+check_server.sh
+dev_workflow.sh.env
