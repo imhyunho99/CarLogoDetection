@@ -20,23 +20,11 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Debug EC2 Connection Secrets
-        run: |
-          if [ -z "${{ secrets.EC2_USER }}" ]; then
-            echo "EC2_USER secret is NOT set."
-          else
-            echo "EC2_USER secret is set."
-          fi
-          if [ -z "${{ secrets.EC2_HOST }}" ]; then
-            echo "EC2_HOST secret is NOT set."
-          else
-            echo "EC2_HOST secret is set."
-          fi
-
       - name: Run deploy script on EC2
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         run: |
+          set -x
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "SENTRY_DSN=$SENTRY_DSN DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY bash /home/ubuntu/CarLogoDetection/deploy.sh"
 
