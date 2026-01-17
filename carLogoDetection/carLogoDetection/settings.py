@@ -10,9 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os # Moved to top
 from pathlib import Path
 from rest_framework import permissions
-import os
+from dotenv import load_dotenv # Moved to top
+import sentry_sdk # Moved to top
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,10 +32,6 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-import os
-from dotenv import load_dotenv
-import sentry_sdk
 
 # Load environment variables
 load_dotenv(BASE_DIR.parent / '.env')
