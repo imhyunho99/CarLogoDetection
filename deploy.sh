@@ -10,6 +10,8 @@ echo "SENTRY_DSN=$SENTRY_DSN" > .env
 echo "DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY" >> .env
 
 echo "📥 Git pull"
+git fetch origin master
+git reset --hard origin/master
 git pull origin master
 
 echo "📦 가상환경 활성화"
@@ -25,4 +27,5 @@ echo "🔄 uWSGI 재시작 (systemd)"
 sudo systemctl restart uwsgi
 
 echo "✅ 배포 완료"
+
 
