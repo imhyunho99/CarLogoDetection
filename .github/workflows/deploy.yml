@@ -20,6 +20,11 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
+      - name: Debug EC2 Connection Secrets
+        run: |
+          echo "EC2_USER length: ${{ secrets.EC2_USER }}.${#secrets.EC2_USER}"
+          echo "EC2_HOST length: ${{ secrets.EC2_HOST }}.${#secrets.EC2_HOST}"
+
       - name: Run deploy script on EC2
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
