@@ -14,6 +14,9 @@ git fetch origin master
 git reset --hard origin/master
 git pull origin master
 
+echo "Creating logs directory"
+mkdir -p logs
+
 echo "📦 가상환경 활성화"
 source $VENV/bin/activate
 
