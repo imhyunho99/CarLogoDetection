@@ -1,6 +1,4 @@
-> 🇬🇧 **English summary** — A deep-learning web service that detects and classifies car-brand logos from uploaded images using a PyTorch model, served via Django REST Framework + React and deployed on Oracle Cloud.
->
-> 🇰🇷 한국어 상세 설명은 아래에 있습니다.
+> A deep-learning web service that detects and classifies car-brand logos from uploaded images using a PyTorch model, served via Django REST Framework and React and deployed on Oracle Cloud.
 
 ---
 
