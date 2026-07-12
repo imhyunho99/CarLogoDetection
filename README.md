@@ -1,3 +1,9 @@
+> 🇬🇧 **English summary** — A deep-learning web service that detects and classifies car-brand logos from uploaded images using a PyTorch model, served via Django REST Framework + React and deployed on Oracle Cloud.
+>
+> 🇰🇷 한국어 상세 설명은 아래에 있습니다.
+
+---
+
 # CarLogoDetection
 
 CarLogoDetection은 업로드된 이미지에서 자동차 로고를 인식하는 웹 서비스입니다.  
